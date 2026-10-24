@@ -1,0 +1,1125 @@
+<title>RY Studio</title>
+<meta name="description" content="RY Studio — Ryan Yan, certified professional photographer in the San Francisco Bay Area. Portrait, wedding, commercial and landscape photography.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..700&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+/* Ethereal Glass on OLED black · asymmetrical bento · split-complementary: amber accent (analogous to the photographs), cool blue secondary (complementary), neutral ground */
+:root{
+  --ground:oklch(0.125 0.004 63);
+  --surf-1:oklch(1 0 0 / .035);
+  --surf-2:oklch(1 0 0 / .055);
+  --surf-solid:oklch(0.165 0.005 63);
+  --hair:oklch(1 0 0 / .10);
+  --hair-2:oklch(1 0 0 / .055);
+  --ink:oklch(0.970 0.003 63);
+  --ink-2:oklch(0.760 0.010 63);
+  --ink-3:oklch(0.640 0.010 63);
+  --accent:oklch(0.749 0.130 63);
+  --accent-soft:oklch(0.749 0.130 63 / .14);
+  --second:oklch(0.679 0.094 253.6);
+  --second-soft:oklch(0.679 0.094 253.6 / .16);
+  --on-accent:oklch(0.180 0.020 63);
+  --ease:cubic-bezier(.32,.72,0,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ui:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cn:"Noto Sans SC","Noto Sans CJK SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --gut:max(16px,4vw);
+  --maxw:1320px;
+  --r:2rem;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html.lock{overflow:hidden}
+[id]{scroll-margin-top:110px}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.7;
+     -webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3,h4{margin:0;font-weight:500;font-variation-settings:"wdth" 112;letter-spacing:-.025em;line-height:1.04;text-wrap:balance}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+button{font:inherit;color:inherit}
+
+/* Ambient mesh + grain */
+.mesh{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(42vw 42vw at 78% 8%, rgba(231,154,78,.13), transparent 62%),
+    radial-gradient(38vw 38vw at 8% 42%, rgba(110,155,209,.09), transparent 64%),
+    radial-gradient(50vw 40vw at 60% 96%, rgba(231,154,78,.07), transparent 66%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.032;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+main,.nav,footer{position:relative;z-index:2}
+
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut)}
+.sec{padding-block:clamp(84px,13vh,160px)}
+
+/* Language */
+:root[data-lang="en"] .zh{display:none!important}
+:root[data-lang="zh"] .en{display:none!important}
+:root[data-lang="zh"] .zh{font-family:var(--cn);letter-spacing:.01em}
+:root[data-lang="zh"] h1 .zh,:root[data-lang="zh"] h2 .zh,:root[data-lang="zh"] h3 .zh{font-family:var(--cn);font-weight:500;letter-spacing:.02em;line-height:1.24}
+:root[data-lang="zh"] .eyebrow .zh{letter-spacing:.18em}
+
+/* Eyebrow pill */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;
+  background:var(--surf-1);box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.14);
+  font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+:root[data-lang="zh"] .eyebrow{font-size:13px;text-transform:none}
+
+/* Island nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:center;
+     padding:clamp(14px,2.2vh,26px) var(--gut) 0;pointer-events:none}
+.nav-pill{pointer-events:auto;display:flex;align-items:center;gap:6px;width:max-content;max-width:100%;
+  padding:8px 8px 8px 18px;border-radius:999px;background:rgba(10,10,11,.62);backdrop-filter:blur(26px) saturate(1.5);
+  -webkit-backdrop-filter:blur(26px) saturate(1.5);
+  box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.16),0 18px 48px -24px rgba(0,0,0,.9)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:10px}
+.mark{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent);
+      color:var(--on-accent);font-size:10.5px;font-weight:700;letter-spacing:.03em}
+.brand b{font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap;font-variation-settings:"wdth" 108}
+.nlinks{display:flex;align-items:center;gap:2px}
+.nlinks a{text-decoration:none;font-size:13.5px;color:var(--ink-2);padding:9px 13px;border-radius:999px;
+          white-space:nowrap;transition:color .4s var(--ease),background .4s var(--ease)}
+.nlinks a:hover{color:var(--ink);background:var(--surf-1)}
+.lang{display:flex;gap:2px;margin-left:6px;padding:3px;border-radius:999px;background:var(--surf-1);
+      box-shadow:inset 0 0 0 1px var(--hair-2)}
+.lang button{border:0;background:none;cursor:pointer;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+             padding:6px 11px;border-radius:999px;color:var(--ink-3);transition:all .4s var(--ease);min-height:30px}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.burger{display:none;width:42px;height:42px;border:0;border-radius:999px;background:var(--surf-1);cursor:pointer;
+        box-shadow:inset 0 0 0 1px var(--hair-2);position:relative;margin-left:4px}
+.burger span{position:absolute;left:12px;width:18px;height:1.4px;background:var(--ink);border-radius:2px;
+             transition:transform .6s var(--ease),opacity .3s var(--ease)}
+.burger span:nth-child(1){top:17px}
+.burger span:nth-child(2){top:23px}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(3px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){transform:translateY(-3px) rotate(-45deg)}
+@media (max-width:980px){.nlinks{display:none}.burger{display:block}}
+
+.sheet{position:fixed;inset:0;z-index:39;background:rgba(5,5,5,.86);backdrop-filter:blur(34px);
+       -webkit-backdrop-filter:blur(34px);display:grid;place-content:center;gap:6px;text-align:center;
+       opacity:0;visibility:hidden;transition:opacity .6s var(--ease),visibility .6s}
+.sheet.open{opacity:1;visibility:visible}
+.sheet a{text-decoration:none;font-size:clamp(28px,7vw,44px);font-weight:500;letter-spacing:-.025em;
+         padding:12px 24px;opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.sheet.open a{opacity:1;transform:none}
+.sheet.open a:nth-child(1){transition-delay:.10s}
+.sheet.open a:nth-child(2){transition-delay:.15s}
+.sheet.open a:nth-child(3){transition-delay:.20s}
+.sheet.open a:nth-child(4){transition-delay:.25s}
+.sheet.open a:nth-child(5){transition-delay:.30s}
+.sheet.open a:nth-child(6){transition-delay:.35s}
+
+/* Island button, button-in-button */
+.btn{display:inline-flex;align-items:center;gap:14px;padding:9px 9px 9px 24px;border:0;border-radius:999px;
+  background:var(--ink);color:var(--ground);text-decoration:none;font-size:14.5px;font-weight:600;cursor:pointer;
+  min-height:48px;transition:transform .5s var(--ease),box-shadow .5s var(--ease),background .5s var(--ease)}
+.btn .ic{width:32px;height:32px;border-radius:999px;background:rgba(5,5,5,.09);display:grid;place-items:center;flex:0 0 auto;
+         transition:transform .55s var(--ease),background .55s var(--ease)}
+.btn:hover .ic{transform:translate(4px,-1px) scale(1.05);background:rgba(5,5,5,.16)}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:var(--surf-1);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.12)}
+.btn.ghost .ic{background:var(--surf-2)}
+.btn.ghost:hover .ic{background:rgba(255,255,255,.12)}
+.btn.amber{background:var(--accent);color:var(--on-accent)}
+.btn svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* Quiet link */
+.qlink{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:13.5px;font-weight:600;
+       color:var(--accent);min-height:44px;transition:gap .45s var(--ease)}
+.qlink:hover{gap:14px}
+.qlink svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* Double bezel */
+.bez{padding:7px;border-radius:var(--r);background:var(--surf-1);flex:1;min-width:0;
+     box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.12)}
+.bez > .core{border-radius:calc(var(--r) - 7px);background:var(--surf-solid);overflow:hidden;
+             box-shadow:inset 0 1px 1px rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.04)}
+
+/* Scroll entry */
+.js .rise{opacity:0;transform:translateY(58px);filter:blur(9px)}
+.js .rise.in{opacity:1;transform:none;filter:none;
+  transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.js .rise.d1.in{transition-delay:.08s}
+.js .rise.d2.in{transition-delay:.16s}
+.js .rise.d3.in{transition-delay:.24s}
+
+/* Hero — full-bleed photograph, copy bottom-left, live light top-right */
+.hero{position:relative;overflow:hidden;isolation:isolate;background:var(--ground)}
+.hero-media{position:absolute;inset:0;z-index:-3}
+.hero-media img{width:100%;height:100%;object-fit:cover;object-position:50% 58%;
+  animation:heroIn 1.8s var(--ease-out) both}
+@keyframes heroIn{from{transform:scale(1.06)}to{transform:scale(1)}}
+.hero-wash{position:absolute;inset:0;z-index:-2;pointer-events:none;background:
+  linear-gradient(180deg,oklch(0.10 0.004 63 / .62) 0%,oklch(0.10 0.004 63 / 0) 24%,
+                         oklch(0.10 0.004 63 / 0) 42%,oklch(0.10 0.004 63 / .70) 74%,var(--ground) 100%),
+  radial-gradient(85% 65% at 0% 100%,oklch(0.10 0.004 63 / .66),oklch(0.10 0.004 63 / 0) 62%)}
+.hero-dim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--ground);opacity:0}
+.hero-in{position:relative;max-width:var(--maxw);margin-inline:auto;min-height:100dvh;
+  padding:clamp(104px,14vh,132px) var(--gut) clamp(44px,8vh,92px);
+  display:grid;grid-template-rows:auto 1fr auto;gap:24px}
+.hero h1{font-size:clamp(40px,5.4vw,88px);font-weight:600;font-variation-settings:"wdth" 108;letter-spacing:-.035em;
+  text-shadow:0 2px 30px oklch(0.10 0 0 / .35)}
+.hero h1 .fade{color:var(--ink-2)}
+:root[data-lang="zh"] .hero h1{font-size:clamp(34px,5vw,76px);letter-spacing:.01em}
+.hero-copy{max-width:min(1000px,100%)}
+.hero-lede{margin-top:22px;max-width:44ch;color:var(--ink-2);font-size:clamp(16px,1.25vw,18px)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
+
+/* live light pill */
+.now{justify-self:end;align-self:start;display:inline-flex;align-items:center;gap:10px;max-width:100%;
+  padding:9px 16px 9px 13px;border-radius:999px;background:oklch(0.12 0.004 63 / .55);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px oklch(1 0 0 / .14);
+  font-size:13px;font-weight:500;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.now b{color:var(--ink);font-weight:600}
+.now .sep{opacity:.45}
+.now .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:var(--ink-3);position:relative}
+.now[data-phase="gold"] .dot{background:var(--accent)}
+.now[data-phase="blue"] .dot{background:var(--second)}
+.now[data-phase="gold"] .dot::after,.now[data-phase="blue"] .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid currentColor;color:inherit;opacity:0;animation:pulse 2.4s var(--ease-out) infinite}
+.now[data-phase="gold"] .dot::after{border-color:var(--accent)}
+.now[data-phase="blue"] .dot::after{border-color:var(--second)}
+@keyframes pulse{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+.now .msg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+
+/* photo tag, same language as the work tiles */
+.hero-tag{display:grid;justify-items:end;gap:4px;text-align:right;flex:0 0 auto;padding-bottom:6px}
+.hero-tag .hr{font-size:12.5px;font-weight:700;letter-spacing:.1em;color:var(--accent);font-variant-numeric:tabular-nums;
+  padding:5px 10px;border-radius:999px;background:oklch(0.10 0.004 63 / .55);box-shadow:inset 0 0 0 1px var(--hair)}
+.hero-tag .t{font-size:13px;color:var(--ink-2)}
+
+/* scroll: the photo drifts and dims as the page moves on (CSS scroll timeline, no JS) */
+@supports (animation-timeline: scroll()){
+  @media (prefers-reduced-motion:no-preference){
+    .hero-media{animation:heroDrift linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    @keyframes heroDrift{to{transform:translateY(7%)}}
+    .hero-dim{animation:heroDim linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    @keyframes heroDim{to{opacity:.6}}
+  }
+}
+
+/* strip under the hero */
+.strip{max-width:var(--maxw);margin-inline:auto;padding:clamp(34px,5vh,52px) var(--gut) 0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--hair-2)}
+.stat{display:grid;gap:4px;padding:22px 22px 4px 0}
+.stat + .stat{padding-left:22px;border-left:1px solid var(--hair-2)}
+.stat b{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+:root[data-lang="zh"] .stat b{letter-spacing:.02em}
+.stat span{font-size:13.5px;color:var(--ink-3)}
+
+/* tablet */
+@media (max-width:1023px){
+  .hero h1{font-size:clamp(40px,7vw,68px)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat:nth-child(3){padding-left:0;border-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--hair-2);margin-top:4px}
+}
+/* phone */
+@media (max-width:767px){
+  .hero-media img{object-position:36% 60%}
+  .hero-wash{background:
+    linear-gradient(180deg,oklch(0.10 0.004 63 / .55) 0%,oklch(0.10 0.004 63 / 0) 22%,
+                           oklch(0.10 0.004 63 / .35) 40%,oklch(0.10 0.004 63 / .82) 66%,var(--ground) 100%)}
+  .hero-in{padding:96px 16px 36px;gap:18px}
+  .now{justify-self:start;font-size:13px;padding:8px 14px 8px 12px}
+  .hero h1{font-size:clamp(36px,10.4vw,46px)}
+  :root[data-lang="zh"] .hero h1{font-size:clamp(32px,9vw,40px)}
+  .hero-lede{margin-top:16px;font-size:16px}
+  .hero-cta{margin-top:24px}
+  .hero-cta .btn{flex:1 1 100%;justify-content:space-between}
+  .hero-tag{display:none}
+  .strip{padding-inline:16px}
+}
+@media (max-width:420px){
+  .stats{grid-template-columns:1fr}
+  .stat,.stat + .stat{padding:16px 0 4px;border-left:0}
+  .stat + .stat{border-top:1px solid var(--hair-2);margin-top:0}
+}
+.now .ps{display:none}
+@media (max-width:767px){.now .pl{display:none}.now .ps{display:inline}}
+/* short landscape phones: let the hero grow instead of squashing the copy */
+@media (max-height:520px) and (orientation:landscape){
+  .hero-in{min-height:0;padding-top:96px}
+  .hero h1{font-size:clamp(32px,5vw,44px)}
+}
+
+/* Section head */
+.shead{display:grid;gap:18px;max-width:60ch;margin-bottom:clamp(38px,6vh,66px)}
+.shead h2{font-size:clamp(30px,4.4vw,60px);font-weight:600;font-variation-settings:"wdth" 110;letter-spacing:-.03em}
+.shead h2 .fade{color:var(--ink-3)}
+:root[data-lang="zh"] .shead h2{font-size:clamp(26px,3.6vw,46px);letter-spacing:.015em}
+.shead p{color:var(--ink-2);max-width:52ch}
+
+/* Bento — work */
+.bento{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.5vw,20px);grid-auto-flow:row dense}
+.tile{grid-column:span 1;margin:0;cursor:zoom-in;position:relative;display:flex}
+.tile.w2{grid-column:span 2}
+.tile .core{position:relative;height:100%}
+.tile img{width:100%;height:100%;object-fit:cover;aspect-ratio:var(--ar,3/2);
+          transition:transform 1s var(--ease),filter 1s var(--ease)}
+.tile:hover img{transform:scale(1.035)}
+.tile[hidden]{display:none}
+.tcap{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      padding:clamp(14px,1.8vw,22px);background:linear-gradient(0deg,rgba(5,5,5,.86) 0%,rgba(5,5,5,.36) 48%,transparent 100%);
+      opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.tcap .l{display:grid;gap:3px;min-width:0}
+.tcap .t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.tcap .n{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tcap .hr{flex:0 0 auto;font-size:12.5px;font-weight:700;letter-spacing:.1em;color:var(--accent);
+          font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:999px;background:rgba(5,5,5,.55);
+          box-shadow:inset 0 0 0 1px var(--hair)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:clamp(22px,3.4vh,34px)}
+.chip{border:0;border-radius:999px;padding:10px 17px;min-height:44px;cursor:pointer;font-size:13.5px;font-weight:600;
+      color:var(--ink-2);background:var(--surf-1);box-shadow:inset 0 0 0 1px var(--hair-2);
+      transition:all .45s var(--ease)}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);box-shadow:none}
+@media (max-width:860px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.w2{grid-column:span 2}}
+@media (max-width:620px){.bento{grid-template-columns:1fr;gap:16px}.tile,.tile.w2{grid-column:span 1}
+}
+
+
+/* Work timeline — the day the photographs were made */
+.tl-bar{position:sticky;top:84px;z-index:20;margin-bottom:clamp(22px,3.2vh,34px);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(14px,2vw,26px);align-items:center;
+  padding:13px 18px;border-radius:999px;background:rgba(10,10,11,.72);
+  backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+  box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.14),0 16px 40px -28px rgba(0,0,0,.9)}
+.tl-now{display:flex;align-items:baseline;gap:11px;min-width:0}
+.tl-now .hr{font-size:20px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;
+  color:var(--accent);transition:color .5s var(--ease)}
+.tl-now .ph{font-size:13px;font-weight:600;color:var(--ink-3);white-space:nowrap}
+.tl-track{position:relative;height:10px;border-radius:999px;overflow:visible;background:rgba(255,255,255,.055)}
+.tl-fill{position:absolute;inset:0;border-radius:999px;overflow:hidden}
+.tl-fill i{position:absolute;top:0;bottom:0;display:block}
+.tl-mark{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:999px;
+  background:var(--ink);box-shadow:0 0 0 3px rgba(5,5,5,.9),0 0 18px rgba(231,154,78,.5);
+  left:0;transition:left .7s var(--ease)}
+.tl-ends{display:flex;justify-content:space-between;margin-top:7px;font-size:11.5px;font-weight:600;
+  letter-spacing:.1em;color:var(--ink-3);font-variant-numeric:tabular-nums}
+@media (max-width:680px){
+  .tl-bar{grid-template-columns:1fr;gap:10px;border-radius:22px;padding:14px 18px;top:80px}
+  .tl-now{justify-content:space-between}
+}
+/* the hour badge stays visible — it is what makes the timeline readable at a glance */
+.tcap{opacity:1;transform:none;background:linear-gradient(0deg,rgba(5,5,5,.78) 0%,rgba(5,5,5,.22) 42%,transparent 100%)}
+.tcap .l{opacity:0;transform:translateY(8px);transition:opacity .55s var(--ease),transform .55s var(--ease)}
+.tile:hover .tcap .l,.tile:focus-visible .tcap .l{opacity:1;transform:none}
+@media (hover:none){.tcap .l{opacity:1;transform:none}}
+
+/* Services bento */
+.svc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.5vw,20px)}
+.svc .bez{display:flex}
+.svc .core{padding:clamp(22px,2.4vw,32px);display:grid;align-content:start;gap:12px;width:100%}
+.svc .rn{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--accent)}
+.svc h3{font-size:clamp(19px,1.7vw,24px);font-weight:600;letter-spacing:-.02em}
+:root[data-lang="zh"] .svc h3{letter-spacing:.02em}
+.svc p{font-size:14.5px;color:var(--ink-2)}
+.svc ul{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:7px}
+.svc li{font-size:13.5px;color:var(--ink-3);padding-left:16px;position:relative}
+.svc li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:1px;background:var(--accent);opacity:.7}
+.svc .qlink{margin-top:4px;justify-self:start}
+@media (max-width:1040px){.svc{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.svc{grid-template-columns:1fr}}
+
+/* Golden hour */
+.gh-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(22px,3.4vw,54px);align-items:center}
+.gh-card .core{padding:clamp(22px,2.6vw,34px)}
+.gh-f{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gh-f label{display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+:root[data-lang="zh"] .gh-f label,:root[data-lang="zh"] .field label{text-transform:none;letter-spacing:.06em;font-size:13px}
+select,input,textarea{font-family:var(--ui);font-size:15px;color:var(--ink);background:rgba(255,255,255,.04);
+  border:0;box-shadow:inset 0 0 0 1px var(--hair),inset 0 1px 1px rgba(255,255,255,.08);border-radius:14px;
+  padding:13px 15px;width:100%;min-width:0;min-height:48px;transition:box-shadow .45s var(--ease)}
+select:focus,input:focus,textarea:focus{outline:none;box-shadow:inset 0 0 0 1px var(--accent),0 0 0 4px var(--accent-soft)}
+option{background:#121314;color:var(--ink)}
+.gh-bar{position:relative;height:14px;margin-top:28px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.055)}
+.gh-bar i{position:absolute;top:0;bottom:0;display:block}
+.seg-night{background:rgba(255,255,255,.07)}
+.seg-blue{background:var(--second);opacity:.65}
+.seg-gold{background:var(--accent)}
+.seg-day{background:rgba(255,255,255,.17)}
+.gh-ticks{position:relative;height:18px;margin-top:9px}
+.gh-ticks span{position:absolute;top:0;font-size:11.5px;font-weight:600;letter-spacing:.1em;color:var(--ink-3);
+  white-space:nowrap;font-variant-numeric:tabular-nums;transform:translateX(-50%)}
+.gh-ticks span.s{transform:none;left:0}
+.gh-ticks span.e{transform:none;right:0;left:auto}
+.gh-key{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;font-size:12px;font-weight:600;letter-spacing:.1em;
+        text-transform:uppercase;color:var(--ink-3)}
+:root[data-lang="zh"] .gh-key{text-transform:none;letter-spacing:.04em;font-size:13px}
+.gh-key b{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.gh-key i{width:16px;height:8px;border-radius:999px;display:inline-block}
+.gh-out{display:grid;margin-top:26px}
+.gh-row{display:flex;align-items:baseline;gap:14px;padding-block:13px;border-top:1px solid var(--hair-2)}
+.gh-row .k{font-size:13.5px;color:var(--ink-2);min-width:0}
+.gh-row .v{margin-left:auto;font-size:19px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.gh-row.hi .v{color:var(--accent);font-size:21px}
+.gh-note{margin-top:22px;font-size:13.5px;color:var(--ink-3);max-width:40ch}
+@media (max-width:900px){.gh-grid{grid-template-columns:1fr}}
+@media (max-width:480px){.gh-f{grid-template-columns:1fr}}
+
+/* Prints */
+.pr-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(22px,3.4vw,54px);align-items:center}
+.pr-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.sizes{display:grid;margin-top:26px}
+.size-row{display:flex;align-items:baseline;gap:16px;padding-block:14px;border-top:1px solid var(--hair-2)}
+.size-row .k{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.size-row .v{margin-left:auto;font-size:13.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+@media (max-width:860px){.pr-grid{grid-template-columns:1fr}}
+
+/* About */
+.ab-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(22px,3.4vw,54px);align-items:start}
+.ab-body{display:grid;gap:15px;color:var(--ink-2);max-width:50ch;font-size:16.5px}
+.cert .core{padding:clamp(22px,2.4vw,30px);display:grid;gap:14px}
+.cert .badge{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);
+             box-shadow:inset 0 0 0 1px rgba(231,154,78,.3)}
+.cert .badge svg{width:22px;height:22px;stroke:var(--accent);stroke-width:1.3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cert b{font-size:19px;font-weight:600;letter-spacing:-.015em}
+.cert span{font-size:13.5px;color:var(--ink-3)}
+.facts{display:grid;margin-top:8px}
+.fact{display:flex;align-items:baseline;gap:14px;padding-block:11px;border-top:1px solid var(--hair-2);font-size:13.5px}
+.fact .k{color:var(--ink-3);flex:0 0 92px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+:root[data-lang="zh"] .fact .k{text-transform:none;letter-spacing:.06em;font-size:13px}
+.fact .v{color:var(--ink-2)}
+@media (max-width:860px){.ab-grid{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{display:grid;gap:10px;max-width:880px}
+details{border-radius:20px;background:var(--surf-1);box-shadow:inset 0 0 0 1px var(--hair-2);overflow:hidden}
+details[open]{box-shadow:inset 0 0 0 1px var(--hair)}
+summary{cursor:pointer;list-style:none;padding:20px 24px;display:flex;align-items:center;gap:16px;
+        font-size:clamp(16px,1.5vw,19px);font-weight:600;letter-spacing:-.015em;min-height:44px}
+:root[data-lang="zh"] summary{letter-spacing:.02em}
+summary::-webkit-details-marker{display:none}
+summary .pm{margin-left:auto;width:26px;height:26px;border-radius:999px;background:var(--surf-2);display:grid;place-items:center;flex:0 0 auto;
+            transition:transform .6s var(--ease)}
+summary .pm svg{width:12px;height:12px;stroke:var(--ink-2);stroke-width:1.5;fill:none;stroke-linecap:round}
+details[open] summary .pm{transform:rotate(135deg)}
+details:not([open]) > .fcontent{display:none}
+.fcontent{padding:0 24px 22px;color:var(--ink-2);font-size:15px;max-width:62ch}
+
+/* Inquiry */
+.inq-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(22px,3.4vw,54px);align-items:start}
+.steps{list-style:none;margin:30px 0 0;padding:0;display:grid}
+.steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;padding-block:18px;border-top:1px solid var(--hair-2)}
+.steps .n{grid-row:span 2;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);
+  font-variant-numeric:tabular-nums;padding-top:4px}
+.steps .b{font-size:16.5px;font-weight:600;letter-spacing:-.015em}
+:root[data-lang="zh"] .steps .b{letter-spacing:.02em}
+.steps .t{font-size:14px;color:var(--ink-3);line-height:1.6}
+.form-card .core{padding:clamp(22px,2.6vw,34px)}
+form{display:grid;gap:16px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:grid;gap:8px;min-width:0}
+.hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+.field label{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.field label .req{color:var(--accent)}
+textarea{resize:vertical;min-height:104px;line-height:1.65}
+.fnote{font-size:13px;color:var(--ink-3)}
+.fmsg{border-radius:16px;padding:14px 17px;background:var(--accent-soft);box-shadow:inset 0 0 0 1px rgba(231,154,78,.26);
+      font-size:14px;color:var(--ink-2);display:grid;gap:5px}
+.fmsg[hidden]{display:none}
+@media (max-width:900px){.inq-grid{grid-template-columns:1fr}}
+@media (max-width:480px){.f2{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--hair-2);margin-top:clamp(60px,9vh,110px)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 30px;padding-block:32px;color:var(--ink-3);font-size:13.5px}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:70;background:rgba(4,4,5,.95);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    display:grid;grid-template-rows:1fr auto;
+    padding:calc(72px + env(safe-area-inset-top,0px)) var(--gut) calc(22px + env(safe-area-inset-bottom,0px));
+    animation:fade .4s var(--ease) both}
+.lb[hidden]{display:none}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.lb-stage{position:relative;min-height:0}
+.lb-stage img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;width:auto;height:auto;
+              object-fit:contain;border-radius:18px}
+.lb-cap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 18px;padding-top:18px;text-align:center}
+.lb-cap .m{font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--accent);font-variant-numeric:tabular-nums}
+.lb-cap .t{font-size:19px;font-weight:600;letter-spacing:-.015em}
+.lb-cap .s{font-size:14px;color:var(--ink-3)}
+.lb-btn{position:absolute;border:0;border-radius:999px;background:var(--surf-1);color:var(--ink);cursor:pointer;
+        display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--hair);transition:background .45s var(--ease)}
+.lb-btn:hover{background:var(--surf-2)}
+.lb-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.lb-x{top:calc(18px + env(safe-area-inset-top,0px));right:var(--gut);width:46px;height:46px}
+.lb-prev,.lb-next{top:50%;width:48px;height:48px;margin-top:-24px}
+.lb-prev{left:var(--gut)}
+.lb-next{right:var(--gut)}
+@media (max-width:620px){.lb-prev,.lb-next{top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px));margin-top:0}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .js .rise{opacity:1!important;transform:none!important;filter:none!important}
+  .hero-media img{animation:none!important}
+}
+</style>
+
+<div class="mesh" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H6M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-seal" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-2.5L17 22l-1.5-7.5"/></symbol>
+</defs></svg>
+
+<nav class="nav">
+  <div class="nav-pill">
+    <a class="brand" href="#top"><span class="mark">RY</span><b>RY Studio</b></a>
+    <div class="nlinks">
+      <a href="#work"><span class="en">Work</span><span class="zh">作品</span></a>
+      <a href="#services"><span class="en">Services</span><span class="zh">服务</span></a>
+      <a href="#light"><span class="en">Golden Hour</span><span class="zh">黄金时刻</span></a>
+      <a href="#inquire"><span class="en">Inquire</span><span class="zh">询价</span></a>
+    </div>
+    <div class="lang" role="group" aria-label="Language 语言">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-label="Menu 菜单"><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="sheet" id="sheet">
+  <a href="#work"><span class="en">Work</span><span class="zh">作品</span></a>
+  <a href="#services"><span class="en">Services</span><span class="zh">服务</span></a>
+  <a href="#light"><span class="en">Golden Hour</span><span class="zh">黄金时刻</span></a>
+  <a href="#prints"><span class="en">Prints</span><span class="zh">作品销售</span></a>
+  <a href="#about"><span class="en">About</span><span class="zh">关于</span></a>
+  <a href="#inquire"><span class="en">Inquire</span><span class="zh">询价</span></a>
+</div>
+
+<main>
+<header class="hero" id="top">
+  <div class="hero-media">
+    <img id="heroImg" src="img/hero.webp" srcset="img/hero-s.webp 1280w, img/hero.webp 2576w" sizes="100vw" width="2576" height="1093" fetchpriority="high"
+         alt="Coastal ridges at golden hour, fog flowing through the valleys above the Pacific">
+  </div>
+  <div class="hero-wash" aria-hidden="true"></div>
+  <div class="hero-dim" aria-hidden="true"></div>
+  <div class="hero-in">
+    <p class="now rise" id="now" data-phase="day" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="msg" id="nowMsg"><span class="en">Now in San Francisco</span><span class="zh">旧金山此刻</span></span>
+    </p>
+    <div aria-hidden="true"></div>
+    <div class="hero-foot">
+      <div class="hero-copy">
+        <span class="eyebrow rise"><span class="dot"></span><span class="en">Ryan Yan · San Francisco Bay Area</span><span class="zh">Ryan Yan · 旧金山湾区</span></span>
+        <h1 class="rise d1" style="margin-top:22px">
+          <span class="en">Photography for people,<br>places <span class="fade">and work.</span></span>
+          <span class="zh">拍人，拍山海，<br><span class="fade">也拍你的生意。</span></span>
+        </h1>
+        <p class="hero-lede rise d2">
+          <span class="en">Certified professional photographer. Landscape is where I learned to wait — and the same patience with light goes into every portrait, wedding and commercial shoot.</span>
+          <span class="zh">湾区认证专业摄影师。我从拍风光起步，为一束光等上两个小时是常事。同样的耐心，我用在你的人像、婚纱和商务拍摄上。中英文沟通。</span>
+        </p>
+        <div class="hero-cta rise d3">
+          <a class="btn amber" href="#inquire"><span class="en">Request a quote</span><span class="zh">免费询价</span><span class="ic"><svg><use href="#i-arrow"/></svg></span></a>
+          <a class="btn ghost" href="#work"><span class="en">See the work</span><span class="zh">看作品</span><span class="ic"><svg><use href="#i-arrow"/></svg></span></a>
+        </div>
+      </div>
+      <div class="hero-tag rise d3" aria-hidden="true">
+        <span class="hr">18:10</span>
+        <span class="t"><span class="en">The ridge</span><span class="zh">山脊</span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="stats rise">
+    <div class="stat"><b><span class="en">Portrait · Wedding</span><span class="zh">人像 · 婚纱</span></b><span><span class="en">On location, natural light</span><span class="zh">外景，自然光</span></span></div>
+    <div class="stat"><b><span class="en">Commercial · Property</span><span class="zh">商务 · 房地产</span></b><span><span class="en">Usage rights included</span><span class="zh">含商业授权</span></span></div>
+    <div class="stat"><b><span class="en">Landscape prints</span><span class="zh">风光作品</span></b><span><span class="en">Archival, framed to your wall</span><span class="zh">收藏级装裱，按墙定尺寸</span></span></div>
+    <div class="stat"><b><span class="en">Quoted per job</span><span class="zh">按项目报价</span></b><span><span class="en">A real number, not a range</span><span class="zh">明确数字，不给区间</span></span></div>
+  </div>
+</div>
+
+<section class="sec wrap" id="work" aria-labelledby="work-h">
+  <div class="shead">
+    <span class="eyebrow rise"><span class="dot"></span><span class="en">Work · dawn to night</span><span class="zh">作品 · 从破晓到入夜</span></span>
+    <h2 id="work-h" class="rise d1"><span class="en">Every frame, <span class="fade">at the hour it was made</span></span><span class="zh">每一张，<span class="fade">都标着它是几点拍的</span></span></h2>
+    <p class="rise d2"><span class="en">The day runs from 07:50 to 20:05. Hover any frame for the hour and what was happening. Click to open it full screen.</span><span class="zh">这一天从 07:50 排到 20:05。鼠标停在任意一张上会显示时刻和当时的情况，点开可以全屏看。</span></p>
+  </div>
+  <div class="chips rise" role="group" aria-label="Filter 筛选">
+    <button class="chip" type="button" data-f="all" aria-pressed="true"><span class="en">All</span><span class="zh">全部</span></button>
+    <button class="chip" type="button" data-f="landscape" aria-pressed="false"><span class="en">Landscape</span><span class="zh">风光</span></button>
+    <button class="chip" type="button" data-f="portrait" aria-pressed="false"><span class="en">Portrait</span><span class="zh">人像</span></button>
+    <button class="chip" type="button" data-f="wedding" aria-pressed="false"><span class="en">Wedding</span><span class="zh">婚纱</span></button>
+    <button class="chip" type="button" data-f="commercial" aria-pressed="false"><span class="en">Commercial</span><span class="zh">商务</span></button>
+  </div>
+  <div class="tl-bar rise" id="tlBar">
+    <div class="tl-now">
+      <span class="hr" id="tlHr">07:50</span>
+      <span class="ph" id="tlPh"><span class="en">Dawn</span><span class="zh">破晓</span></span>
+    </div>
+    <div>
+      <div class="tl-track"><div class="tl-fill" id="tlFill"></div><span class="tl-mark" id="tlMark"></span></div>
+      <div class="tl-ends"><span>07:00</span><span>12:00</span><span>21:00</span></div>
+    </div>
+  </div>
+  <div class="bento" id="bento"></div>
+</section>
+
+<section class="sec wrap" id="services" aria-labelledby="svc-h">
+  <div class="shead">
+    <span class="eyebrow rise"><span class="dot"></span><span class="en">Services</span><span class="zh">服务项目</span></span>
+    <h2 id="svc-h" class="rise d1"><span class="en">What I shoot, <span class="fade">and what you get</span></span><span class="zh">我拍什么，<span class="fade">你拿到什么</span></span></h2>
+    <p class="rise d2"><span class="en">Every job is quoted individually — hours, location and the number of final images all change the price. Tell me what you need and you get a real number, not a range.</span><span class="zh">每个项目单独报价。时长、地点、成片数量不同，价格就不同。先告诉我需求，我给你一个明确的数字，不给区间。</span></p>
+  </div>
+  <div class="svc">
+    <article class="bez rise"><div class="core">
+      <span class="rn">I</span>
+      <h3><span class="en">Portrait</span><span class="zh">人像摄影</span></h3>
+      <p><span class="en">Natural light, on location, inside the one or two hours of the day when the light is actually good.</span><span class="zh">只在一天中光最好的那一两个小时拍。地点我来挑，你人到就行。</span></p>
+      <ul>
+        <li><span class="en">Headshots, family, graduation</span><span class="zh">形象照 / 全家福 / 毕业照</span></li>
+        <li><span class="en">Location scouted for you</span><span class="zh">拍摄地点由我安排</span></li>
+        <li><span class="en">Retouched final images</span><span class="zh">精修成片</span></li>
+      </ul>
+      <a class="qlink" href="#inquire"><span class="en">Request a quote</span><span class="zh">询价</span><svg><use href="#i-arrow"/></svg></a>
+    </div></article>
+    <article class="bez rise d1"><div class="core">
+      <span class="rn">II</span>
+      <h3><span class="en">Wedding &amp; engagement</span><span class="zh">婚纱与订婚</span></h3>
+      <p><span class="en">Shot with a landscape eye — wide places, real light, the two of you small inside it.</span><span class="zh">用拍风光的眼光拍婚纱：把你们放进真正的大场景里，光是真的，人也是真的，不摆拍。</span></p>
+      <ul>
+        <li><span class="en">Engagement sessions</span><span class="zh">订婚 / 情侣拍摄</span></li>
+        <li><span class="en">Wedding day coverage</span><span class="zh">婚礼当天跟拍</span></li>
+        <li><span class="en">Online gallery delivery</span><span class="zh">在线相册交付</span></li>
+      </ul>
+      <a class="qlink" href="#inquire"><span class="en">Request a quote</span><span class="zh">询价</span><svg><use href="#i-arrow"/></svg></a>
+    </div></article>
+    <article class="bez rise d2"><div class="core">
+      <span class="rn">III</span>
+      <h3><span class="en">Commercial &amp; property</span><span class="zh">商务与房地产</span></h3>
+      <p><span class="en">Imagery for businesses, listings and brands across the Bay Area. Commercial rights included, no extra licensing fee.</span><span class="zh">为湾区的企业、房源和品牌拍照。交付即可商用，不另外收授权费。</span></p>
+      <ul>
+        <li><span class="en">Team &amp; staff headshots</span><span class="zh">团队形象照</span></li>
+        <li><span class="en">Real estate &amp; architecture</span><span class="zh">房源 / 建筑摄影</span></li>
+        <li><span class="en">Commercial usage rights</span><span class="zh">含商业使用授权</span></li>
+      </ul>
+      <a class="qlink" href="#inquire"><span class="en">Request a quote</span><span class="zh">询价</span><svg><use href="#i-arrow"/></svg></a>
+    </div></article>
+    <article class="bez rise d3"><div class="core">
+      <span class="rn">IV</span>
+      <h3><span class="en">Landscape prints</span><span class="zh">风光作品收藏</span></h3>
+      <p><span class="en">Archival prints of my own landscape work, framed to the wall you have in mind, and licensing for commercial use.</span><span class="zh">我自己的风光作品，可做成收藏级装裱画作，按你的墙面定尺寸，也可授权商用。</span></p>
+      <ul>
+        <li><span class="en">Framed or unframed</span><span class="zh">装裱 / 不装裱</span></li>
+        <li><span class="en">Office &amp; interior commissions</span><span class="zh">办公与室内空间定制</span></li>
+        <li><span class="en">Image licensing</span><span class="zh">图片授权</span></li>
+      </ul>
+      <a class="qlink" href="#prints"><span class="en">See prints</span><span class="zh">了解详情</span><svg><use href="#i-arrow"/></svg></a>
+    </div></article>
+  </div>
+</section>
+
+<section class="sec wrap" id="light" aria-labelledby="gh-h">
+  <div class="gh-grid">
+    <div>
+      <div class="shead" style="margin-bottom:0">
+        <span class="eyebrow rise"><span class="dot"></span><span class="en">Golden hour finder</span><span class="zh">黄金时刻查询</span></span>
+        <h2 id="gh-h" class="rise d1"><span class="en">When the light <span class="fade">is worth it</span></span><span class="zh">光，<span class="fade">什么时候最好</span></span></h2>
+        <p class="rise d2"><span class="en">Pick a place and a day. The page works out sunrise, both golden hours, sunset and blue hour for that date — calculated on the spot, not looked up in a table.</span><span class="zh">选一个地点、选一天，页面当场算出那天的日出、两段黄金时刻、日落和蓝调时刻。是真算出来的，不是查表。</span></p>
+      </div>
+      <p class="gh-note rise d3"><span class="en">Free to use, no sign-up. For other photographers, event planners, or anyone who just wants a good photo of their own.</span><span class="zh">免费用，不用登记。同行、办活动的，或者只是想自己拍张好看的照片，都可以拿去用。</span></p>
+    </div>
+    <div class="bez gh-card rise d1"><div class="core">
+      <div class="gh-f">
+        <div><label for="gh-loc"><span class="en">Place</span><span class="zh">地点</span></label><select id="gh-loc"></select></div>
+        <div><label for="gh-date"><span class="en">Date</span><span class="zh">日期</span></label><input id="gh-date" type="date"></div>
+      </div>
+      <div class="gh-bar" id="ghBar" aria-hidden="true"></div>
+      <div class="gh-ticks" aria-hidden="true">
+        <span class="s">05:00</span><span style="left:43.75%">12:00</span><span class="e">21:00</span>
+      </div>
+      <div class="gh-key" aria-hidden="true">
+        <b><i class="seg-gold"></i><span class="en">Golden</span><span class="zh">黄金时刻</span></b>
+        <b><i class="seg-blue"></i><span class="en">Blue</span><span class="zh">蓝调</span></b>
+        <b><i class="seg-night"></i><span class="en">Night</span><span class="zh">夜</span></b>
+      </div>
+      <div class="gh-out" id="ghOut"></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="prints" aria-labelledby="pr-h">
+  <div class="pr-grid">
+    <figure class="bez pr-img rise" style="margin:0"><div class="core">
+      <img src="img/print-wall.webp" alt="A large framed landscape photograph on a warm white wall above a wooden console table" loading="lazy">
+    </div></figure>
+    <div>
+      <div class="shead" style="margin-bottom:0">
+        <span class="eyebrow rise"><span class="dot"></span><span class="en">Prints &amp; licensing</span><span class="zh">作品销售与授权</span></span>
+        <h2 id="pr-h" class="rise d1"><span class="en">Take the light <span class="fade">home</span></span><span class="zh">把这束光 <span class="fade">带回家</span></span></h2>
+        <p class="rise d2"><span class="en">The landscape work here is available as archival prints, and licensed for offices, hotels, publishers and brands. Tell me about the wall and I will recommend a size.</span><span class="zh">这里的风光作品都可以做成收藏级装裱画作，也能授权给办公空间、酒店、出版和品牌使用。告诉我墙面多大、朝哪边，我来推荐尺寸。</span></p>
+      </div>
+      <div class="sizes rise d2">
+        <div class="size-row"><span class="k"><span class="en">Small</span><span class="zh">小尺寸</span></span><span class="v">12 × 18 in</span></div>
+        <div class="size-row"><span class="k"><span class="en">Medium</span><span class="zh">中尺寸</span></span><span class="v">20 × 30 in</span></div>
+        <div class="size-row"><span class="k"><span class="en">Large</span><span class="zh">大尺寸</span></span><span class="v">30 × 45 in</span></div>
+        <div class="size-row"><span class="k"><span class="en">Custom · licensing</span><span class="zh">定制 · 授权</span></span><span class="v"><span class="en">By request</span><span class="zh">按需</span></span></div>
+      </div>
+      <a class="btn ghost rise d3" href="#inquire" style="margin-top:28px"><span class="en">Ask about prints</span><span class="zh">询问作品</span><span class="ic"><svg><use href="#i-arrow"/></svg></span></a>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap" id="about" aria-labelledby="ab-h">
+  <div class="ab-grid">
+    <div>
+      <div class="shead" style="margin-bottom:26px">
+        <span class="eyebrow rise"><span class="dot"></span><span class="en">About</span><span class="zh">关于</span></span>
+        <h2 id="ab-h" class="rise d1"><span class="en">Wait for the weather. <span class="fade">Leave room for the sky.</span></span><span class="zh">等天气。<span class="fade">给天空留白。</span></span></h2>
+      </div>
+      <div class="ab-body rise d2">
+        <p class="en">Ryan Yan is a certified professional photographer based in the San Francisco Bay Area, shooting landscape, portrait, wedding and commercial work across the region.</p>
+        <p class="en">I work in English and Mandarin. Scouting, timing and watching the weather are part of the service — you do not need to know anything about photography, only what the photos are for.</p>
+        <p class="zh">Ryan Yan，湾区认证专业摄影师，拍摄范围覆盖整个湾区 —— 风光、人像、婚纱、商务都拍。</p>
+        <p class="zh">中英文都能沟通。选地点、定时辰、盯天气，这些都算在服务里 —— 你不用懂摄影，只要告诉我照片用来做什么。</p>
+      </div>
+    </div>
+    <div class="bez cert rise d2"><div class="core">
+      <span class="badge"><svg><use href="#i-seal"/></svg></span>
+      <div>
+        <b>Certified Professional Photographer</b>
+        <span style="display:block;margin-top:5px"><span class="en">Certification on file. Happy to show it.</span><span class="zh">认证专业摄影师 · 证书可随时出示</span></span>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="k"><span class="en">Area</span><span class="zh">区域</span></span><span class="v">San Francisco Bay Area</span></div>
+        <div class="fact"><span class="k"><span class="en">Fields</span><span class="zh">类型</span></span><span class="v"><span class="en">Landscape · Portrait · Wedding · Commercial</span><span class="zh">风光 · 人像 · 婚纱 · 商务</span></span></div>
+        <div class="fact"><span class="k"><span class="en">Language</span><span class="zh">语言</span></span><span class="v"><span class="en">English · Mandarin</span><span class="zh">中文 · English</span></span></div>
+        <div class="fact"><span class="k"><span class="en">Pricing</span><span class="zh">价格</span></span><span class="v"><span class="en">Quoted per job</span><span class="zh">按项目报价</span></span></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="sec wrap" aria-labelledby="faq-h">
+  <div class="shead">
+    <span class="eyebrow rise"><span class="dot"></span>FAQ</span>
+    <h2 id="faq-h" class="rise d1"><span class="en">Before you book</span><span class="zh">预约之前</span></h2>
+  </div>
+  <div class="faq rise d2">
+    <details open><summary><span class="en">How much does a shoot cost?</span><span class="zh">拍摄多少钱？</span><span class="pm"><svg><use href="#i-plus"/></svg></span></summary>
+      <div class="fcontent"><p class="en">Every shoot is quoted individually, because hours, location and the number of final images all change the price. Send your date and what the photos are for, and a real number comes back — usually the same day.</p><p class="zh">每次拍摄单独报价，因为时长、地点和成片数量都会影响价格。把日期和用途发给我，我会回一个明确的数字，通常当天就回。</p></div></details>
+    <details><summary><span class="en">Where will we shoot?</span><span class="zh">在哪里拍？</span><span class="pm"><svg><use href="#i-plus"/></svg></span></summary>
+      <div class="fcontent"><p class="en">I pick it. The choice comes from what the photos are for, the season, and where the light will be that day. You do not have to research anything — if you already have a place in mind, even better.</p><p class="zh">我来选。看照片的用途、看季节、看那天的光在哪边。你完全不用做功课；当然，你自己有想去的地方更好。</p></div></details>
+    <details><summary><span class="en">How long until I get the photos?</span><span class="zh">多久能拿到照片？</span><span class="pm"><svg><use href="#i-plus"/></svg></span></summary>
+      <div class="fcontent"><p class="en">A preview selection comes first so you can choose, then the full retouched set. The exact timeline is written into your quote, so you know before you book.</p><p class="zh">先给你一组预览照片选片，之后交付全部精修成片。具体天数会写进报价里，定之前你就知道。</p></div></details>
+    <details><summary><span class="en">What if it rains?</span><span class="zh">下雨怎么办？</span><span class="pm"><svg><use href="#i-plus"/></svg></span></summary>
+      <div class="fcontent"><p class="en">Outdoor shoots move to another date at no charge. And bad weather is not always bad news — overcast light is softer than sun, and fog is worth going out for.</p><p class="zh">外景可以免费改期。而且天气差不一定是坏事 —— 阴天的光比大太阳柔和，起雾的日子更是值得专门跑一趟。</p></div></details>
+    <details><summary><span class="en">Can we talk in Chinese?</span><span class="zh">可以用中文沟通吗？</span><span class="pm"><svg><use href="#i-plus"/></svg></span></summary>
+      <div class="fcontent"><p class="en">Yes. English or Mandarin, whichever is easier for you — including on the day of the shoot.</p><p class="zh">可以。中文、英文都行，拍摄当天也一样。</p></div></details>
+  </div>
+</section>
+
+<section class="sec wrap" id="inquire" aria-labelledby="inq-h">
+  <div class="inq-grid">
+    <div>
+      <div class="shead" style="margin-bottom:0">
+        <span class="eyebrow rise"><span class="dot"></span><span class="en">Inquire</span><span class="zh">询价与预约</span></span>
+        <h2 id="inq-h" class="rise d1"><span class="en">Tell me about<br><span class="fade">your shoot.</span></span><span class="zh">说说你的<br><span class="fade">拍摄需求。</span></span></h2>
+        <p class="rise d2"><span class="en">Send the form and a quote comes back: what is included, how long the shoot runs, when you get the photos. No obligation.</span><span class="zh">填完表单，你会收到一份明确的报价：包含什么、拍多久、什么时候交片。询价免费，不用先定下来。</span></p>
+      </div>
+      <ol class="steps rise d2">
+        <li><span class="n">01</span><span class="b"><span class="en">You send the form</span><span class="zh">你填好表单</span></span><span class="t"><span class="en">Date, place and what the photos are for. Two minutes.</span><span class="zh">日期、地点、照片用途。两分钟。</span></span></li>
+        <li><span class="n">02</span><span class="b"><span class="en">A quote comes back</span><span class="zh">我回你一份报价</span></span><span class="t"><span class="en">A real number, what is included, and when you get the photos. Usually the same day.</span><span class="zh">一个明确的数字、包含什么、什么时候交片。通常当天回。</span></span></li>
+        <li><span class="n">03</span><span class="b"><span class="en">We lock the hour</span><span class="zh">我们定下时刻</span></span><span class="t"><span class="en">I pick the location and the time of day. You just turn up.</span><span class="zh">地点和时辰我来定，你人到就行。</span></span></li>
+      </ol>
+    </div>
+    <div class="bez form-card rise d1"><div class="core">
+      <form id="inq" novalidate>
+        <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="f2">
+          <div class="field"><label for="f-name"><span class="en">Name</span><span class="zh">姓名</span> <span class="req">*</span></label><input id="f-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="f-contact"><span class="en">Phone or WeChat</span><span class="zh">电话 / 微信</span></label><input id="f-contact" name="phone" autocomplete="tel"></div>
+        </div>
+        <div class="field"><label for="f-email"><span class="en">Email</span><span class="zh">邮箱</span> <span class="req">*</span></label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="f2">
+          <div class="field"><label for="f-type"><span class="en">Type of shoot</span><span class="zh">拍摄类型</span> <span class="req">*</span></label>
+            <select id="f-type" name="type" required>
+              <option value="">—</option>
+              <option>Portrait 人像</option>
+              <option>Wedding / Engagement 婚纱 / 订婚</option>
+              <option>Commercial / Headshots 商务形象</option>
+              <option>Real estate / Architecture 房地产 / 建筑</option>
+              <option>Prints / Licensing 作品购买 / 授权</option>
+              <option>Other 其他</option>
+            </select></div>
+          <div class="field"><label for="f-date"><span class="en">Preferred date</span><span class="zh">希望拍摄日期</span></label><input id="f-date" name="date" type="date"></div>
+        </div>
+        <div class="field"><label for="f-people"><span class="en">People / scope</span><span class="zh">人数 / 规模</span></label><input id="f-people" name="people" placeholder="2 people, 2 hours"></div>
+        <div class="field"><label for="f-msg"><span class="en">What are the photos for?</span><span class="zh">照片的用途和想法</span></label><textarea id="f-msg" name="message"></textarea></div>
+        <button class="btn amber" type="submit" style="justify-self:start"><span class="en">Send inquiry</span><span class="zh">发送询价</span><span class="ic"><svg><use href="#i-arrow"/></svg></span></button>
+        <p class="fnote"><span class="en">Replies usually within 24 hours.</span><span class="zh">通常 24 小时内回复。</span></p>
+        <div class="fmsg" id="fmsg" hidden></div>
+      </form>
+    </div></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 RY Studio · Ryan Yan</span>
+    <span><span class="en">Photography · San Francisco Bay Area</span><span class="zh">摄影 · 旧金山湾区</span></span>
+  </div>
+</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lb-stage"><img id="lbImg" alt=""></div>
+  <div class="lb-cap"><span class="m" id="lbM"></span><span class="t" id="lbT"></span><span class="s" id="lbS"></span></div>
+  <button class="lb-btn lb-x" id="lbX" type="button" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+  <button class="lb-btn lb-prev" id="lbPrev" type="button" aria-label="Previous"><svg><use href="#i-left"/></svg></button>
+  <button class="lb-btn lb-next" id="lbNext" type="button" aria-label="Next"><svg><use href="#i-arrow"/></svg></button>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  root.classList.add('js');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Language ---------- */
+  function setLang(l){
+    root.setAttribute('data-lang',l);
+    root.setAttribute('lang', l==='zh' ? 'zh-Hans' : 'en');
+    document.querySelectorAll('.lang button').forEach(function(b){
+      b.setAttribute('aria-pressed', b.dataset.lang===l ? 'true':'false');
+    });
+    var ppl=document.getElementById('f-people');
+    if(ppl)ppl.placeholder = l==='zh' ? '2 人 · 2 小时' : '2 people, 2 hours';
+    try{localStorage.setItem('ry-lang',l);}catch(e){}
+  }
+  var saved=null; try{saved=localStorage.getItem('ry-lang');}catch(e){}
+  setLang(saved==='zh'?'zh':'en');
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener('click',function(){setLang(b.dataset.lang);});
+  });
+
+  /* ---------- Menu ---------- */
+  var burger=document.getElementById('burger'),sheet=document.getElementById('sheet');
+  function closeSheet(){sheet.classList.remove('open');burger.setAttribute('aria-expanded','false');root.classList.remove('lock');}
+  burger.addEventListener('click',function(){
+    var open=sheet.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open?'true':'false');
+    root.classList.toggle('lock',open);
+  });
+  sheet.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.closest('a'))closeSheet();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&sheet.classList.contains('open'))closeSheet();});
+
+  /* ---------- Work bento ---------- */
+  var SHOTS=[
+    {f:'w2',t:'07:50',cat:'wedding',ar:'4/5',w:1,en:'Through the fog',zh:'雾中长径',nEn:'Low cloud had not lifted yet.',nZh:'低云还没散。'},
+    {f:'c4',t:'08:30',cat:'commercial',ar:'3/2',w:2,en:'The kit',zh:'器材',nEn:'Packed before first light.',nZh:'天亮前收拾好的。'},
+    {f:'w3',t:'09:30',cat:'wedding',ar:'3/2',w:1,en:'The rings',zh:'一对素圈',nEn:'Window light, no flash.',nZh:'窗光，没用闪光灯。'},
+    {f:'p4',t:'10:15',cat:'portrait',ar:'4/5',w:1,en:'Hands and an old book',zh:'掌中旧书',nEn:'One lamp, everything else off.',nZh:'只开一盏灯。'},
+    {f:'c2',t:'11:00',cat:'commercial',ar:'3/2',w:2,en:'Interior',zh:'室内空间',nEn:'Waited for the sun to clear the roofline.',nZh:'等太阳越过屋顶。'},
+    {f:'l1',t:'11:20',cat:'landscape',ar:'3/2',w:1,en:'Where lava meets the sea',zh:'熔岩入海',nEn:'Overcast for forty minutes, then it broke.',nZh:'阴了四十分钟，然后开了。'},
+    {f:'l6',t:'12:40',cat:'landscape',ar:'3/2',w:2,en:'Light on stone',zh:'石上流光',nEn:'Only works when the sun is directly overhead.',nZh:'只有正午直射才有这个光。'},
+    {f:'c1',t:'13:00',cat:'commercial',ar:'4/5',w:1,en:'Headshot',zh:'商务形象',nEn:'North-facing wall, no direct sun.',nZh:'朝北的墙，避开直射。'},
+    {f:'l3',t:'14:05',cat:'landscape',ar:'3/2',w:1,en:'Rain over the crater',zh:'雨落火山口',nEn:'Rained all day. Went anyway.',nZh:'下了一整天雨，还是去了。'},
+    {f:'p2',t:'16:45',cat:'portrait',ar:'4/5',w:1,en:'By the old fence',zh:'木栅之侧',nEn:'Cloud cover doing the work of a softbox.',nZh:'云层就是最好的柔光箱。'},
+    {f:'l4',t:'17:30',cat:'landscape',ar:'3/2',w:2,en:'Grass and the coastline',zh:'草坡与海岸',nEn:'Ninety seconds of this, then gone.',nZh:'只亮了九十秒。'},
+    {f:'hero',t:'18:10',cat:'landscape',ar:'21/9',w:2,en:'The ridge',zh:'山脊',nEn:'Haze made the layers separate.',nZh:'雾气把层次分开了。'},
+    {f:'p1',t:'18:20',cat:'portrait',ar:'4/5',w:1,en:'Backlight in the grass',zh:'逆光草原',nEn:'Sun behind her, exposed for the hair.',nZh:'太阳在背后，按头发测光。'},
+    {f:'w1',t:'18:40',cat:'wedding',ar:'3/2',w:2,en:'On the cliff edge',zh:'海崖之约',nEn:'Stood them small on purpose.',nZh:'故意把人放得很小。'},
+    {f:'l2',t:'18:52',cat:'landscape',ar:'3/2',w:1,en:'Above the sea of clouds',zh:'云海之上',nEn:'Two hours up, ten minutes of light.',nZh:'爬了两小时，拍了十分钟。'},
+    {f:'p3',t:'19:02',cat:'portrait',ar:'4/5',w:1,en:'Family on the sand',zh:'海边一家',nEn:'Let them walk and kept shooting.',nZh:'让他们一直走，一直拍。'},
+    {f:'l5',t:'19:15',cat:'landscape',ar:'3/2',w:2,en:'Marsh at dusk',zh:'暮色湿地',nEn:'Still water, so the sky came twice.',nZh:'水面很静，天空出现了两次。'},
+    {f:'c3',t:'19:48',cat:'commercial',ar:'3/2',w:1,en:'Architecture at blue hour',zh:'蓝调建筑',nEn:'Interior lights and sky finally matched.',nZh:'室内灯光和天色终于一致。'},
+    {f:'w4',t:'20:05',cat:'wedding',ar:'4/5',w:1,en:'Blue hour silhouette',zh:'蓝调剪影',nEn:'Exposed for the sky, let them go dark.',nZh:'按天空测光，人就成了剪影。'}
+  ];
+  var bento=document.getElementById('bento');
+  SHOTS.forEach(function(s,i){
+    var fig=document.createElement('figure');
+    fig.className='tile bez rise'+(s.w===2?' w2':'');
+    fig.tabIndex=0; fig.setAttribute('role','button');
+    fig.setAttribute('aria-label',s.en);
+    fig.dataset.cat=s.cat; fig.dataset.i=i;
+    fig.innerHTML='<div class="core">'+
+      '<img src="img/'+s.f+'-s.webp" alt="'+s.en+'" loading="lazy" style="--ar:'+s.ar+'">'+
+      '<figcaption class="tcap"><span class="l">'+
+        '<span class="t"><span class="en">'+s.en+'</span><span class="zh">'+s.zh+'</span></span>'+
+        '<span class="n"><span class="en">'+s.nEn+'</span><span class="zh">'+s.nZh+'</span></span>'+
+      '</span><span class="hr">'+s.t+'</span></figcaption>'+
+    '</div>';
+    bento.appendChild(fig);
+  });
+
+  var visible=SHOTS.map(function(_,i){return i;});
+  document.querySelectorAll('.chip').forEach(function(b){
+    b.addEventListener('click',function(){
+      var f=b.dataset.f;
+      document.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      visible=[];
+      [].forEach.call(bento.children,function(el,i){
+        var on=(f==='all'||el.dataset.cat===f);
+        el.hidden=!on; if(on)visible.push(i);
+      });
+    });
+  });
+
+  /* ---------- Work timeline ---------- */
+  var T1=7,T2=21;                     /* the bar spans 07:00 to 21:00 */
+  var PHASES=[                        /* [startHour, class] across that span */
+    [7,'seg-gold'],[8.33,'seg-day'],[17,'seg-gold'],[19.17,'seg-blue'],[20.17,'seg-night'],[21,null]
+  ];
+  var NAMES=[[0,'Night','夜'],[5.5,'Dawn','破晓'],[7.5,'Morning','上午'],[11.5,'Midday','正午'],
+             [14,'Afternoon','下午'],[17,'Golden hour','黄金时刻'],[19.17,'Blue hour','蓝调时刻'],[20.17,'Night','夜']];
+  function toH(t){return parseInt(t.slice(0,2),10)+parseInt(t.slice(3),10)/60;}
+  function tlPct(h){return Math.max(0,Math.min(100,(h-T1)/(T2-T1)*100));}
+  (function paintFill(){
+    var fill=document.getElementById('tlFill'),out='';
+    for(var i=0;i<PHASES.length-1;i++){
+      var a=tlPct(PHASES[i][0]),b=tlPct(PHASES[i+1][0]);
+      if(b>a)out+='<i class="'+PHASES[i][1]+'" style="left:'+a.toFixed(2)+'%;width:'+(b-a).toFixed(2)+'%"></i>';
+    }
+    fill.innerHTML=out;
+  })();
+  var tlHr=document.getElementById('tlHr'),tlPh=document.getElementById('tlPh'),tlMark=document.getElementById('tlMark');
+  function setTl(t){
+    var h=toH(t),name=NAMES[0];
+    for(var i=0;i<NAMES.length;i++){if(h>=NAMES[i][0])name=NAMES[i];}
+    tlHr.textContent=t;
+    tlPh.innerHTML='<span class="en">'+name[1]+'</span><span class="zh">'+name[2]+'</span>';
+    tlMark.style.left=tlPct(h).toFixed(2)+'%';
+  }
+  setTl(SHOTS[0].t);
+  if('IntersectionObserver' in window){
+    var tio=new IntersectionObserver(function(es){
+      var best=null;
+      es.forEach(function(e){if(e.isIntersecting&&(!best||e.intersectionRatio>best.intersectionRatio))best=e;});
+      if(best)setTl(SHOTS[+best.target.dataset.i].t);
+    },{rootMargin:'-38% 0px -38% 0px',threshold:[0,.25,.6,1]});
+    [].forEach.call(bento.children,function(el){tio.observe(el);});
+  }
+
+  /* ---------- Scroll entry ---------- */
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+    document.querySelectorAll('.rise').forEach(function(el){
+      if(el.closest('.hero')){requestAnimationFrame(function(){el.classList.add('in');});return;}
+      io.observe(el);
+    });
+  }else{
+    document.querySelectorAll('.rise').forEach(function(el){el.classList.add('in');});
+  }
+
+  /* ---------- Lightbox ---------- */
+  var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbIdx=0,lbFocus=null;
+  function lbShow(i){
+    if(visible.indexOf(i)<0)i=visible[0];
+    lbIdx=i; var s=SHOTS[i];
+    lbImg.src='img/'+s.f+'.webp'; lbImg.alt=s.en;
+    document.getElementById('lbM').textContent=s.t;
+    document.getElementById('lbT').innerHTML='<span class="en">'+s.en+'</span><span class="zh">'+s.zh+'</span>';
+    document.getElementById('lbS').innerHTML='<span class="en">'+s.nEn+'</span><span class="zh">'+s.nZh+'</span>';
+  }
+  function step(d){
+    var pos=visible.indexOf(lbIdx); if(pos<0)pos=0;
+    lbShow(visible[(pos+d+visible.length)%visible.length]);
+  }
+  function lbOpen(i){lbFocus=document.activeElement;lb.hidden=false;root.classList.add('lock');lbShow(i);document.getElementById('lbX').focus();}
+  function lbClose(){lb.hidden=true;root.classList.remove('lock');lbImg.removeAttribute('src');if(lbFocus)lbFocus.focus();}
+  bento.addEventListener('click',function(e){
+    var t=e.target.closest('.tile'); if(t)lbOpen(+t.dataset.i);
+  });
+  bento.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    var t=e.target.closest('.tile'); if(!t)return;
+    e.preventDefault(); lbOpen(+t.dataset.i);
+  });
+  document.getElementById('lbX').addEventListener('click',lbClose);
+  document.getElementById('lbPrev').addEventListener('click',function(){step(-1);});
+  document.getElementById('lbNext').addEventListener('click',function(){step(1);});
+  lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('lb-stage'))lbClose();});
+  document.addEventListener('keydown',function(e){
+    if(lb.hidden)return;
+    if(e.key==='Escape')lbClose(); else if(e.key==='ArrowLeft')step(-1); else if(e.key==='ArrowRight')step(1);
+  });
+  var sx=null;
+  lb.addEventListener('pointerdown',function(e){sx=e.clientX;});
+  lb.addEventListener('pointerup',function(e){
+    if(sx===null)return; var dx=e.clientX-sx; sx=null;
+    if(Math.abs(dx)>50)step(dx<0?1:-1);
+  });
+
+  /* ---------- Golden hour ---------- */
+  var RAD=Math.PI/180;
+  var PLACES=[
+    {en:'San Francisco',zh:'旧金山',lat:37.7749,lng:-122.4194},
+    {en:'Oakland',zh:'奥克兰',lat:37.8044,lng:-122.2712},
+    {en:'Berkeley',zh:'伯克利',lat:37.8715,lng:-122.2730},
+    {en:'Sausalito',zh:'索萨利托',lat:37.8591,lng:-122.4853},
+    {en:'Half Moon Bay',zh:'半月湾',lat:37.4636,lng:-122.4286},
+    {en:'Palo Alto',zh:'帕洛阿托',lat:37.4419,lng:-122.1430},
+    {en:'San Jose',zh:'圣何塞',lat:37.3382,lng:-121.8863},
+    {en:'Fremont',zh:'弗里蒙特',lat:37.5485,lng:-121.9886},
+    {en:'Santa Cruz',zh:'圣克鲁斯',lat:36.9741,lng:-122.0308},
+    {en:'Point Reyes',zh:'雷耶斯角',lat:38.0699,lng:-122.8064},
+    {en:'Napa',zh:'纳帕',lat:38.2975,lng:-122.2869},
+    {en:'Monterey',zh:'蒙特雷',lat:36.6002,lng:-121.8947}
+  ];
+  function solar(y,mo,d,lat,lng,angle,rise){
+    var jd=Date.UTC(y,mo-1,d,12,0,0)/86400000+2440587.5;
+    var n=Math.round(jd-2451545.0+0.0008);
+    var Js=n-lng/360;
+    var M=(357.5291+0.98560028*Js)%360;
+    var C=1.9148*Math.sin(M*RAD)+0.0200*Math.sin(2*M*RAD)+0.0003*Math.sin(3*M*RAD);
+    var L=(M+C+180+102.9372)%360;
+    var Jt=2451545.0+Js+0.0053*Math.sin(M*RAD)-0.0069*Math.sin(2*L*RAD);
+    var sinD=Math.sin(L*RAD)*Math.sin(23.4397*RAD);
+    var cosD=Math.cos(Math.asin(sinD));
+    var cosW=(Math.sin(angle*RAD)-Math.sin(lat*RAD)*sinD)/(Math.cos(lat*RAD)*cosD);
+    if(cosW>1||cosW<-1)return null;
+    var w=Math.acos(cosW)/RAD;
+    return new Date(((rise?Jt-w/360:Jt+w/360)-2440587.5)*86400000);
+  }
+  function hhmm(dt){return dt?dt.toLocaleString('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',minute:'2-digit',hour12:true}):'--';}
+  function hours(dt){
+    if(!dt)return null;
+    var p=dt.toLocaleString('en-US',{timeZone:'America/Los_Angeles',hour:'2-digit',minute:'2-digit',hour12:false}).split(':');
+    return (+p[0])+(+p[1])/60;
+  }
+  var locSel=document.getElementById('gh-loc'),dateIn=document.getElementById('gh-date'),ghOut=document.getElementById('ghOut');
+  PLACES.forEach(function(pl,i){var o=document.createElement('option');o.value=i;o.textContent=pl.en+' · '+pl.zh;locSel.appendChild(o);});
+  (function(){var t=new Date();dateIn.value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');})();
+  var S1=5,S2=21;
+  function pct(h){return Math.max(0,Math.min(100,(h-S1)/(S2-S1)*100));}
+  function ghRow(en,zh,v,hi){
+    return '<div class="gh-row'+(hi?' hi':'')+'"><span class="k"><span class="en">'+en+'</span><span class="zh">'+zh+'</span></span><span class="v">'+v+'</span></div>';
+  }
+  function drawBar(blueAm,rise,ghAm,ghPm,set,bluePm){
+    var bar=document.getElementById('ghBar');
+    if([blueAm,rise,ghAm,ghPm,set,bluePm].some(function(v){return v==null;})){bar.innerHTML='';return;}
+    var segs=[['seg-night',0,pct(blueAm)],['seg-blue',pct(blueAm),pct(rise)],['seg-gold',pct(rise),pct(ghAm)],
+              ['seg-day',pct(ghAm),pct(ghPm)],['seg-gold',pct(ghPm),pct(set)],['seg-blue',pct(set),pct(bluePm)],
+              ['seg-night',pct(bluePm),100]];
+    bar.innerHTML=segs.map(function(sg){
+      var w=sg[2]-sg[1]; if(w<=0)return '';
+      return '<i class="'+sg[0]+'" style="left:'+sg[1].toFixed(2)+'%;width:'+w.toFixed(2)+'%"></i>';
+    }).join('');
+  }
+  function calc(){
+    var pr=(dateIn.value||'').split('-'); if(pr.length!==3)return;
+    var y=+pr[0],mo=+pr[1],d=+pr[2],pl=PLACES[+locSel.value]||PLACES[0];
+    var sunrise=solar(y,mo,d,pl.lat,pl.lng,-0.833,true),
+        ghAm=solar(y,mo,d,pl.lat,pl.lng,6,true),
+        ghPm=solar(y,mo,d,pl.lat,pl.lng,6,false),
+        sunset=solar(y,mo,d,pl.lat,pl.lng,-0.833,false),
+        blue=solar(y,mo,d,pl.lat,pl.lng,-6,false),
+        blueAm=solar(y,mo,d,pl.lat,pl.lng,-6,true);
+    ghOut.innerHTML=
+      ghRow('Sunrise','日出',hhmm(sunrise))+
+      ghRow('Morning golden hour','晨间黄金时刻',hhmm(sunrise)+' – '+hhmm(ghAm),true)+
+      ghRow('Evening golden hour','暮间黄金时刻',hhmm(ghPm)+' – '+hhmm(sunset),true)+
+      ghRow('Sunset','日落',hhmm(sunset))+
+      ghRow('Blue hour','蓝调时刻',hhmm(sunset)+' – '+hhmm(blue));
+    drawBar(hours(blueAm),hours(sunrise),hours(ghAm),hours(ghPm),hours(sunset),hours(blue));
+  }
+  locSel.addEventListener('change',calc);
+  dateIn.addEventListener('change',calc);
+  calc();
+
+  /* ---------- Live light status in the hero ---------- */
+  var SF={lat:37.7749,lng:-122.4194};
+  function laDate(t){
+    var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(t);
+    var o={};p.forEach(function(x){o[x.type]=x.value;});return [+o.year,+o.month,+o.day];
+  }
+  function clock(t,zh){return t.toLocaleString(zh?'zh-CN':'en-US',{timeZone:'America/Los_Angeles',hour:zh?'2-digit':'numeric',minute:'2-digit',hour12:!zh});}
+  function dur(ms,zh){
+    var m=Math.max(1,Math.round(ms/60000)),h=Math.floor(m/60);m=m%60;
+    if(zh)return (h?h+' 小时 ':'')+(m||!h?m+' 分':'');
+    return (h?h+'h ':'')+(m||!h?m+'m':'');
+  }
+  function lightStatus(now){
+    var d=laDate(now),y=d[0],mo=d[1],dd=d[2];
+    var s=function(a,r){return solar(y,mo,dd,SF.lat,SF.lng,a,r);};
+    var bAm=s(-6,true),rise=s(-0.833,true),gAm=s(6,true),gPm=s(6,false),set=s(-0.833,false),bPm=s(-6,false);
+    var nx=new Date(now.getTime()+86400000),n2=laDate(nx),rise2=solar(n2[0],n2[1],n2[2],SF.lat,SF.lng,-0.833,true);
+    var t=now.getTime(),r={};
+    function out(phase,en,zh){return {phase:phase,en:en,zh:zh};}
+    if(t<bAm)      return out('night','Night · sunrise at '+clock(rise),'夜 · '+clock(rise,1)+' 日出');
+    if(t<rise)     return out('blue','Blue hour now · sunrise at '+clock(rise),'正值蓝调时刻 · '+clock(rise,1)+' 日出');
+    if(t<gAm)      return out('gold','Golden hour now · until '+clock(gAm),'正值黄金时刻 · 持续到 '+clock(gAm,1));
+    if(t<gPm)      return out('day','Golden hour in '+dur(gPm-t),'距黄金时刻还有 '+dur(gPm-t,1));
+    if(t<set)      return out('gold','Golden hour now · sunset at '+clock(set),'正值黄金时刻 · '+clock(set,1)+' 日落');
+    if(t<bPm)      return out('blue','Blue hour now · until '+clock(bPm),'正值蓝调时刻 · 持续到 '+clock(bPm,1));
+    return out('night','Night · sunrise at '+clock(rise2),'夜 · 明早 '+clock(rise2,1)+' 日出');
+  }
+  var nowEl=document.getElementById('now'),nowMsg=document.getElementById('nowMsg');
+  function paintNow(){
+    var t=new Date(),st=lightStatus(t);
+    nowEl.dataset.phase=st.phase;
+    nowMsg.innerHTML='<span class="en"><span class="pl">Now in San Francisco</span><span class="ps">SF</span> <span class="sep">·</span> <b>'+clock(t)+'</b> <span class="sep">·</span> '+st.en+'</span>'+
+                     '<span class="zh"><span class="pl">旧金山此刻</span><span class="ps">旧金山</span> <span class="sep">·</span> <b>'+clock(t,1)+'</b> <span class="sep">·</span> '+st.zh+'</span>';
+  }
+  if(nowEl){paintNow();setInterval(paintNow,60000);}
+
+  /* phone: swap in the vertical hero if it exists */
+  if(window.matchMedia('(max-width:767px), (orientation:portrait) and (max-width:1100px)').matches){
+    var hm=new Image();
+    hm.onload=function(){var h=document.getElementById('heroImg');h.removeAttribute('srcset');h.src='img/hero-m.webp';h.width=hm.naturalWidth;h.height=hm.naturalHeight;h.style.objectPosition='50% 50%';};
+    hm.src='img/hero-m.webp';
+  }
+
+  /* ---------- Inquiry form ----------
+     Paste your Google Apps Script web app URL (…/exec) below to go live:
+     把 Apps Script 网页应用网址（以 /exec 结尾）填到下面这一行，表单就能用了。 */
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbwlJzs4trecxsA_bfy01_BuFPL6N9Yzxr9IHTDVM88cAPE0Eo1Vh2RCka0H7jpznxQ/exec';
+
+  var form=document.getElementById('inq'),msg=document.getElementById('fmsg'),T0=Date.now();
+  function show(en,zh){msg.innerHTML='<div class="en">'+en+'</div><div class="zh">'+zh+'</div>';msg.hidden=false;}
+  var ERR={
+    rate:['You have already sent a few inquiries this hour. I have them and will reply soon.','这一小时内你已提交过几次，我都收到了，会尽快回复。'],
+    busy:['The form is taking a short break. Please try again in a little while.','表单暂时繁忙，请稍后再试。'],
+    invalid:['Please check your name, email and type of shoot.','请检查姓名、邮箱和拍摄类型。']
+  };
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var bad=null;
+    ['f-name','f-email','f-type'].forEach(function(id){var el=document.getElementById(id);if(!bad&&!el.value.trim())bad=el;});
+    if(bad){bad.focus();show('Please fill in the required fields.','请填写带 * 的必填项。');return;}
+    var em=document.getElementById('f-email');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())){em.focus();show('Please check your email address.','请检查邮箱格式。');return;}
+    if(!ENDPOINT){
+      show('<b>The form is not connected yet.</b> Add your Apps Script URL in the page script before this site goes live — right now nothing is being delivered.',
+           '<b>表单尚未开通。</b>上线前请在页面脚本里填入 Apps Script 网址 —— 目前提交的内容不会送达。');
+      return;
+    }
+    var data=new URLSearchParams(new FormData(form));
+    data.set('el',String(Date.now()-T0));
+    data.set('lang',document.documentElement.dataset.lang==='zh'?'zh':'en');
+    var btn=form.querySelector('button[type=submit]'); btn.disabled=true;
+    fetch(ENDPOINT,{method:'POST',body:data})
+      .then(function(r){return r.json();})
+      .then(function(res){
+        btn.disabled=false;
+        if(res&&res.ok){form.reset();show('<b>Thank you — your inquiry is on its way.</b> You will hear back within 24 hours.','<b>已收到你的询价。</b>24 小时内回复。');}
+        else{var m=ERR[res&&res.error]||['Something went wrong on the way out. Please try again in a moment.','发送失败，请稍后再试一次。'];show(m[0],m[1]);}
+      })
+      .catch(function(){
+        btn.disabled=false;
+        show('Could not send just now. Please try again in a moment.','当前无法发送，请稍后再试一次。');
+      });
+  });
+})();
+</script>
